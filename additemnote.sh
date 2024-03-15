@@ -24,7 +24,7 @@ set -o pipefail
 
 . ~/.bashrc
 
-VERSION="0.0.1"
+VERSION="1.0."
 APP=$(basename -s .sh "$0")
 SERVER=$(hostname)
 ILS=true
@@ -96,14 +96,14 @@ add_note()
     local which_field="$3"
     local callnum
     if [ "$ILS" == true ]; then 
-        callnum=$(echo "$item" | selitem -iB -oN | selcallnum -iN -oD)
+        callnum=$(echo "$item" | selitem -iB -oN | selcallnum -iN -oD | pipe.pl -oc0)
         [ -n "$callnum" ] || { logit "$item not found!"; return; } 
     else 
         callnum="Test callnum"
     fi
     logit "Adding '$message' to ${item}'s '$which_field' field."
-    echo "S01IVFFADMIN^FEEPLMNA^FcNONE^FWADMIN^NQ${item}^IQ${callnum}^daLC^ND3^NI2^Nz0^NH${which_field}^NE${message}^Fv3000000^^O" >>"$API_FILE" 
-    echo "S02IVFFADMIN^FEEPLMNA^FcNONE^FWADMIN^NQ${item}^IQ${callnum}^IoADMIN^Fv3000000^^O" >>"$API_FILE"
+    echo "^S01IVFFADMIN^FEEPLMNA^FcNONE^FWADMIN^NQ${item}^IQ${callnum}^daLC^ND3^NI2^Nz0^NH${which_field}^NE${message}^Fv3000000^^O" >>"$API_FILE" 
+    echo "^S02IVFFADMIN^FEEPLMNA^FcNONE^FWADMIN^NQ${item}^IQ${callnum}^IoADMIN^Fv3000000^^O" >>"$API_FILE"
 }
 
 ### Check input parameters.
@@ -182,10 +182,10 @@ IFS=$OLD_IFS
 if [ "$IS_TEST" == false ] && [ -s "$API_FILE" ]; then 
     logit "running commands in '$API_FILE'"
     if [ "$ILS" == true ]; then 
-        apiserver -h <"$API_FILE" >>"$LOG_FILE"
+        apiserver -h <"$API_FILE" &>>"$LOG_FILE" 
     fi
 else 
     logit "run the api commands in '$API_FILE' manually with 'apiserver -h < $API_FILE'"
 fi
-
+logit "done"
 exit 0
