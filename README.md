@@ -4,9 +4,9 @@ Shell for adding a note to an item in Symphony.
 Test methods of automating the adding of custom notes to specific items.
 
 There are three possible fields:
-* circnote
-* public
-* Staff
+* CIRCNOTE
+* PUBLIC
+* STAFF
 
 ## Adding a Note
 I have added a Staff note to item 31221376926965 : 'Test TWOSE message'
